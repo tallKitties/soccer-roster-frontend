@@ -4,9 +4,11 @@ import Vue from 'vue'
 import SuiVue from 'semantic-ui-vue'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
+import VeeValidate from 'vee-validate'
 import App from './App'
 import router from './router'
 
+Vue.use(VeeValidate)
 Vue.use(SuiVue)
 Vue.use(VueAxios, axios)
 axios.defaults.baseURL = 'http://localhost:3030/api/v1'
