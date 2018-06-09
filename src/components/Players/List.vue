@@ -1,6 +1,6 @@
 <template>
   <div id="players-list">
-    <headerNav/>
+    <header-nav/>
     <div class="container clearfix">
       <h1 class="pb-2 pt-4 border-bottom text-left">
         Checkout our team!
