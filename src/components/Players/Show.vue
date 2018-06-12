@@ -15,7 +15,7 @@
           Age: {{ player.age }}
         </div>
         <div class="row">
-          Position: {{ player.position }}
+          Position: {{ player.position | capitalize }}
         </div>
         <div class="row">
           Email: {{ player.email }}
