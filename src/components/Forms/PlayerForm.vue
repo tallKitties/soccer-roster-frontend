@@ -1,6 +1,7 @@
 <template>
   <sui-container text text-align="left" id="player-form">
-    <sui-form @submit.prevent="createPlayer">
+    <sui-form @submit.prevent="handleSubmit">
+
       <sui-form-field required>
         <sui-divider hidden/>
         <label for="first_name" class="visuallyhidden">First Name</label>
@@ -9,8 +10,8 @@
           data-vv-as="First name"
           placeholder="first name..."
           type="text"
-          v-model="player.first_name"
           v-validate="'required'"
+          v-model="player.first_name"
         />
         <span
           v-show="errors.has('first_name')"
@@ -18,6 +19,7 @@
             {{ errors.first('first_name')}}
         </span>
       </sui-form-field>
+
       <sui-form-field required>
         <sui-divider hidden/>
         <label for="last_name" class="visuallyhidden">Last Name</label>
@@ -35,6 +37,7 @@
             {{ errors.first('last_name')}}
         </span>
       </sui-form-field>
+
       <sui-form-field required>
         <sui-divider hidden/>
         <label for="email" class="visuallyhidden">Email</label>
@@ -52,6 +55,7 @@
             {{ errors.first('email')}}
         </span>
       </sui-form-field>
+
       <sui-form-field required>
         <sui-divider hidden/>
         <label for="age" class="visuallyhidden">Age</label>
@@ -69,6 +73,7 @@
             {{ errors.first('age')}}
         </span>
       </sui-form-field>
+
       <sui-form-field required>
         <sui-divider hidden/>
         <label for="position" class="visuallyhidden">Position</label>
@@ -87,16 +92,30 @@
             {{ errors.first('position')}}
         </span>
       </sui-form-field>
-      <sui-button primary :disabled="invalidSubmit" type="submit">Create</sui-button>
+
+      <sui-divider/>
+      <sui-divider hidden/>
+
+      <sui-button fluid primary type="submit" :disabled="invalidSubmit">
+          Add Player!
+      </sui-button>
+
     </sui-form>
   </sui-container>
 </template>
 
 <script>
+import textInput from '@/components/Forms/TextInput'
 
 export default {
-  directives: { focus: focus },
+
+  components: {
+    textInput
+  },
+
   name: 'player-form',
+  props: ['formType'],
+
   data () {
     return {
       player: { positions: null },
@@ -105,18 +124,36 @@ export default {
   },
 
   methods: {
+    handleSubmit (e) {
+      formType === "new" ? createPlayer(e) : updatePlayer(e)
+    },
+
+    fetchPlayer () {
+      this.axios.get('/players/' + this.id)
+        .then(response => { this.player = response.data })
+        .catch((e) => {
+          console.log(e)
+          this.$emit('apiError', e.response.data.error)
+        })
+    },
+
+    updatePlayer (e) {
+      this.axios.put('/players/' + this.id)
+        .then(response => { this.player = response.data })
+        .catch((e) => {
+          console.log(e)
+          this.$emit('apiError', e.response.data.error)
+        })
+    },
+
     createPlayer (e) {
       this.axios.post('/players', { player: this.player })
         .then(response => {
-          this.$router.push(
-            {
-              name: 'players-show',
-              params: { id: response.data.id }
-            }
-          )
+          this.goToPlayerShow(response)
         })
         .catch((e) => {
-          alert('Error creating player ' + this.player.first_name)
+          console.log(e)
+          this.$emit('apiError', 'Error creating player')
         })
     },
 
@@ -127,7 +164,8 @@ export default {
             this.buildPositionsCollection(response.data.positions)
         })
         .catch((e) => {
-          console.log('Error getting positions\n' + e)
+          console.log(e)
+          this.$emit('apiError', 'Error getting positions')
         })
     },
 
@@ -138,12 +176,22 @@ export default {
         collection.push({ text: positionUc, value: position })
       })
       return (collection)
+    },
+
+    goToPlayerShow (response) {
+      this.$router.push(
+        {
+          name: 'players-show',
+          params: { id: response.data.id,  }
+        }
+      )
     }
   },
 
   computed: {
     invalidSubmit: function () {
       let fieldNames = Object.keys(this.fields)
+      console.log(this.fields)
       return !fieldNames.every(key => this.fields[key].valid)
     }
   },
@@ -155,14 +203,5 @@ export default {
 </script>
 
 <style scoped>
-  .visuallyhidden {
-    border: 0;
-    clip: rect(0 0 0 0);
-    height: 1px;
-    margin: -1px;
-    overflow: hidden;
-    padding: 0;
-    position: absolute;
-    width: 1px;
-  }
+
 </style>

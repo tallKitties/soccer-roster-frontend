@@ -14,7 +14,8 @@ export default new Router({
       path: '/',
       name: 'players-list',
       component: PlayersList,
-      alias: '/players'
+      alias: '/players',
+      props: true
     },
     {
       path: '/players/:id',
