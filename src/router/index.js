@@ -1,4 +1,6 @@
 import 'semantic-ui-css/semantic.min.css'
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
 import Vue from 'vue'
 import Router from 'vue-router'
 import PlayersList from '@/components/Players/List'
