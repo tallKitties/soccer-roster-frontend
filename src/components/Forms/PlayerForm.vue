@@ -3,14 +3,14 @@
     <b-form-row>
       <b-col>
         <b-form @submit.prevent="createPlayer">
-          <b-form-group id="first-name-input-group"
-                        label="First Name"
-                        label for="first-name-field"
-                        class="sr-only">
-            <b-form-input id="first-name-field"
+          <b-form-group id="first-name-input-group">
+            <b-form-input id="first-name-input"
                           type="text"
                           required
                           placeholder="first name"
+                          aria-label="First Name"
+                          name="first_name"
+                          data-vv-as="First name"
                           v-validate="'required'"
                           v-model="player.first_name">
             </b-form-input>
@@ -18,86 +18,90 @@
               v-show="errors.has('first_name')"
               class="text-danger">
 
-              {{ errors.first('first_name')}}
+              {{ errors.first('first_name') }}
             </span>
           </b-form-group>
 
-          <b-form-group id="last-name-input-group"
-                        label="Last Name"
-                        for="last-name-field"
-                        class="sr-only">
-            <b-form-input id="last-name-field"
+          <b-form-group id="last-name-input-group">
+            <b-form-input id="last-name-input"
                           type="text"
                           required
                           placeholder="last name"
-                          v-model="player.last_name"
-                          v-validate="'required'">
+                          aria-label="Last Name"
+                          name="last_name"
+                          data-vv-as="Last name"
+                          v-validate="'required'"
+                          v-model="player.last_name">
             </b-form-input>
             <span
               v-show="errors.has('last_name')"
               class="text-danger">
 
-              {{ errors.first('last_name')}}
+              {{ errors.first('last_name') }}
             </span>
           </b-form-group>
 
-          <b-form-group id="email-input-group"
-                        label="Email"
-                        for="email"
-                        class="sr-only">
-            <b-form-input id="email-input-field"
+          <b-form-group id="email-input-group">
+            <b-form-input id="email-input"
                           type="email"
                           required
                           placeholder="email"
-                          v-model="player.email"
-                          v-validate="'required|email'">
+                          aria-label="Email"
+                          name="email"
+                          data-vv-as="Email"
+                          v-validate="'required|email'"
+                          v-model="player.email">
             </b-form-input>
             <span
               v-show="errors.has('email')"
               class="text-danger">
 
-              {{ errors.first('email')}}
+              {{ errors.first('email') }}
             </span>
-          </b-form-group>>
+          </b-form-group>
 
-          <b-form-group id="age-input-group"
-                        label="Age"
-                        for="age"
-                        class="sr-only">
-            <b-form-input id="age-input-field"
+          <b-form-group id="age-input-group">
+            <b-form-input id="age-input"
                           type="number"
                           required
                           placeholder="age"
-                          v-model.number="player.age"
-                          v-validate="'required|between:1,100'">
+                          aria-label="Age"
+                          name="age"
+                          data-vv-as="Age"
+                          v-validate="'required|between:1,100'"
+                          v-model.number="player.age">
             </b-form-input>
             <span
               v-show="errors.has('age')"
               class="text-danger">
-                {{ errors.first('age')}}
-            </span>
-          </b-form-group>>
 
-          <b-form-group id="position-select-group"
-                        label="Position"
-                        for="position"
-                        class="sr-only">
-            <b-form-select  id="position-select-field"
+              {{ errors.first('age') }}
+            </span>
+          </b-form-group>
+
+          <b-form-group id="position-select-group">
+            <b-form-select  id="position-select"
                             :options="positions"
                             required
                             placeholder="position"
-                            v-model.number="player.position"
-                            v-validate="'required'">
+                            aria-label="Position"
+                            name="position"
+                            data-vv-as="Position"
+                            v-validate="'required'"
+                            v-model="player.position">
             </b-form-select>
             <span
               v-show="errors.has('position')"
               class="text-danger">
-                {{ errors.first('position')}}
+
+              {{ errors.first('position') }}
             </span>
-          </b-form-group>>
-          <b-button type="submit" :disabled="invalidSubmit">Submit</button>
-        </form>
-  </div>
+          </b-form-group>
+          <b-button type="submit" variant="primary" :disabled="invalidSubmit">Submit</b-button>
+        </b-form>
+      </b-col>
+    </b-form-row>
+  </b-container>
 </template>
 
 <script>
@@ -110,53 +114,55 @@ export default {
     }
   },
 
+  methods: {
 
-  createPlayer (e) {
-    this.axios.post('/players', { player: this.player })
-      .then(response => {
-        this.goToPlayerShow(response)
-      })
-      .catch((e) => {
-        console.log(e)
-        this.$emit('apiError', 'Error creating player')
-      })
-  },
+    createPlayer (e) {
+      this.axios.post('/players', { player: this.player })
+        .then(response => {
+          this.goToPlayerShow(response)
+        })
+        .catch((e) => {
+          console.log(e)
+          this.$emit('apiError', 'Error creating player')
+        })
+    },
 
-  getPostions () {
-    this.axios.get('/players/positions')
-      .then(response => {
-        this.positions =
-          this.buildPositionsCollection(response.data.positions)
-      })
-      .catch((e) => {
-        console.log(e)
-        this.$emit('apiError', 'Error getting positions')
-      })
-  },
+    getPostions () {
+      this.axios.get('/players/positions')
+        .then(response => {
+          this.positions =
+            this.buildPositionsCollection(response.data.positions)
+        })
+        .catch((e) => {
+          console.log(e)
+          this.$emit('apiError', 'Error getting positions')
+        })
+    },
 
-  buildPositionsCollection (positions) {
-    let collection = []
-    positions.forEach((position) => {
-      let positionUc = this.$options.filters.capitalize(position)
-      collection.push({ text: positionUc, value: position })
-    })
-    return (collection)
-  },
+    buildPositionsCollection (positions) {
+      let collection = []
+      positions.forEach((position) => {
+        let positionUc = this.$options.filters.capitalize(position)
+        collection.push({ text: positionUc, value: position })
+      })
+      return (collection)
+    },
 
-  goToPlayerShow (response) {
-    this.$router.push(
-      {
-        name: 'players-show',
-        params: { id: response.data.id,  }
-      }
-    )
+    goToPlayerShow (response) {
+      this.$router.push(
+        {
+          name: 'players-show',
+          params: { id: response.data.id }
+        }
+      )
+    }
   },
 
   computed: {
     invalidSubmit: function () {
-      let fieldNames = Object.keys(this.fields)
-      console.log(this.fields)
-      return !fieldNames.every(key => this.fields[key].valid)
+      return false
+      // let fieldNames = Object.keys(this.fields)
+      // return !fieldNames.every(key => this.fields[key].valid)
     }
   },
 
