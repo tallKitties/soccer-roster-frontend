@@ -3,43 +3,8 @@
     <b-form-row>
       <b-col>
         <b-form @submit.prevent="createPlayer">
-          <b-form-group id="first-name-input-group">
-            <b-form-input id="first-name-input"
-                          type="text"
-                          required
-                          placeholder="first name"
-                          aria-label="First Name"
-                          name="first_name"
-                          data-vv-as="First name"
-                          v-validate="'required'"
-                          v-model="player.first_name">
-            </b-form-input>
-            <span
-              v-show="errors.has('first_name')"
-              class="text-danger">
-
-              {{ errors.first('first_name') }}
-            </span>
-          </b-form-group>
-
-          <b-form-group id="last-name-input-group">
-            <b-form-input id="last-name-input"
-                          type="text"
-                          required
-                          placeholder="last name"
-                          aria-label="Last Name"
-                          name="last_name"
-                          data-vv-as="Last name"
-                          v-validate="'required'"
-                          v-model="player.last_name">
-            </b-form-input>
-            <span
-              v-show="errors.has('last_name')"
-              class="text-danger">
-
-              {{ errors.first('last_name') }}
-            </span>
-          </b-form-group>
+          <text-input v-model="player.first_name" :label="'First Name'" />
+          <text-input v-model="player.last_name" :label="'Last name'" />
 
           <b-form-group id="email-input-group">
             <b-form-input id="email-input"
@@ -105,13 +70,22 @@
 </template>
 
 <script>
+import textInput from '@/components/Forms/Inputs/TextInput'
+
 export default {
   name: 'player-form',
   data () {
     return {
-      player: { position: null },
+      player: {
+        position: null,
+        first_name: ''
+      },
       positions: []
     }
+  },
+
+  components: {
+    textInput
   },
 
   methods: {
@@ -160,9 +134,8 @@ export default {
 
   computed: {
     invalidSubmit: function () {
-      return false
-      // let fieldNames = Object.keys(this.fields)
-      // return !fieldNames.every(key => this.fields[key].valid)
+      let fieldNames = Object.keys(this.fields)
+      return !fieldNames.every(key => this.fields[key].valid)
     }
   },
 
