@@ -2,21 +2,21 @@
   <b-form-group :id="getGroupId">
     <b-form-input :id="getInputId"
                   type="text"
-                  :required="required"
                   :placeholder="getPlaceholder"
                   :aria-label="label"
                   :name="getModelName"
                   :data-vv-as="label"
                   v-validate="'required'"
+                  :class="isInvalid"
                   :value="value"
                   @input.native="$emit('input', $event.target.value)">
     </b-form-input>
-    <span
-      v-show="errors.has(this.getModelName)"
+    <p
+      v-show="hasError"
       class="text-danger">
 
       {{ errors.first(this.getModelName) }}
-    </span>
+    </p>
   </b-form-group>
 </template>
 
@@ -58,29 +58,32 @@ export default {
     required: {
       type: Boolean,
       default: true
-    },
-
-    vValidateParams: {
-      type: String,
-      default: "'required'"
     }
   },
 
   computed: {
-    labelLC: function () {
+    hasError () {
+      return this.errors.has(this.getModelName)
+    },
+
+    isInvalid () {
+      if (this.hasError) return 'is-invalid'
+    },
+
+    labelLC () {
       return this.label.toLowerCase()
     },
 
-    getPlaceholder: function () {
+    getPlaceholder () {
       let ph = this.placeholder
-      return ph ? ph : this.labelLC
+      return !ph ? this.labelLC : ph
     },
 
-    getLowerCaseId: function () {
+    getLowerCaseId () {
       return (this.labelLC.replace(/\s+/g, '-'))
     },
 
-    getGroupId: function () {
+    getGroupId () {
       if (this.groupId) {
         return this.groupId
       }
@@ -88,7 +91,7 @@ export default {
       return (groupId + '-' + 'group')
     },
 
-    getInputId: function () {
+    getInputId () {
       if (this.inputId) {
         return this.inputId
       }
@@ -96,7 +99,7 @@ export default {
       return (inputId + '-' + 'input')
     },
 
-    getModelName: function () {
+    getModelName () {
       return (this.labelLC.replace(/\s+/g, '_'))
     }
   }

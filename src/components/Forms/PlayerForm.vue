@@ -78,7 +78,8 @@ export default {
     return {
       player: {
         position: null,
-        first_name: ''
+        first_name: '',
+        last_name: ''
       },
       positions: []
     }
