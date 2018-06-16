@@ -13,7 +13,7 @@ Vue.use(BootstrapVue)
 Vue.use(VeeValidate)
 Vue.use(SuiVue)
 Vue.use(VueAxios, axios)
-axios.defaults.baseURL = 'http://localhost:3030/api/v1'
+axios.defaults.baseURL = process.env.ROOT_API
 Vue.config.productionTip = false
 
 Vue.filter('capitalize', function (value) {
