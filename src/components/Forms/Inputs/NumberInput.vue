@@ -1,12 +1,12 @@
 <template>
   <b-form-group :id="groupId">
     <b-form-input :id="inputId"
-                  type="text"
+                  type="number"
                   :placeholder="placeholder"
                   :aria-label="label"
                   :name="modelName"
                   :data-vv-as="label"
-                  v-validate="'required'"
+                  v-validate="'required|between:1,100'"
                   :class="isInvalid"
                   :value="value"
                   @input.native="$emit('input', $event.target.value)">
@@ -22,7 +22,7 @@
 
 <script>
 export default {
-  name: 'form-text-input',
+  name: 'form-number-input',
   inject: ['$validator'],
   props: {
 

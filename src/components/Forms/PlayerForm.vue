@@ -5,44 +5,8 @@
         <b-form @submit.prevent="createPlayer">
           <text-input v-model="player.first_name" :label="'First Name'" />
           <text-input v-model="player.last_name" :label="'Last name'" />
-
-          <b-form-group id="email-input-group">
-            <b-form-input id="email-input"
-                          type="email"
-                          required
-                          placeholder="email"
-                          aria-label="Email"
-                          name="email"
-                          data-vv-as="Email"
-                          v-validate="'required|email'"
-                          v-model="player.email">
-            </b-form-input>
-            <span
-              v-show="errors.has('email')"
-              class="text-danger">
-
-              {{ errors.first('email') }}
-            </span>
-          </b-form-group>
-
-          <b-form-group id="age-input-group">
-            <b-form-input id="age-input"
-                          type="number"
-                          required
-                          placeholder="age"
-                          aria-label="Age"
-                          name="age"
-                          data-vv-as="Age"
-                          v-validate="'required|between:1,100'"
-                          v-model.number="player.age">
-            </b-form-input>
-            <span
-              v-show="errors.has('age')"
-              class="text-danger">
-
-              {{ errors.first('age') }}
-            </span>
-          </b-form-group>
+          <email-input v-model="player.email" :label="'Email'" />
+          <number-input v-model="player.age" :label="'Age'" />
 
           <b-form-group id="position-select-group">
             <b-form-select  id="position-select"
@@ -71,6 +35,8 @@
 
 <script>
 import textInput from '@/components/Forms/Inputs/TextInput'
+import numberInput from '@/components/Forms/Inputs/NumberInput'
+import emailInput from '@/components/Forms/Inputs/EmailInput'
 
 export default {
   name: 'player-form',
@@ -79,14 +45,18 @@ export default {
       player: {
         position: null,
         first_name: '',
-        last_name: ''
+        last_name: '',
+        email: '',
+        age: null
       },
       positions: []
     }
   },
 
   components: {
-    textInput
+    textInput,
+    numberInput,
+    emailInput
   },
 
   methods: {

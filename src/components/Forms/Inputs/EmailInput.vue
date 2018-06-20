@@ -1,12 +1,12 @@
 <template>
   <b-form-group :id="groupId">
     <b-form-input :id="inputId"
-                  type="text"
+                  type="email"
                   :placeholder="placeholder"
                   :aria-label="label"
                   :name="modelName"
                   :data-vv-as="label"
-                  v-validate="'required'"
+                  v-validate="'required|email'"
                   :class="isInvalid"
                   :value="value"
                   @input.native="$emit('input', $event.target.value)">
@@ -15,14 +15,14 @@
       v-show="hasError"
       class="text-danger">
 
-      {{ errors.first(this.modelName) }}
+      {{ errors.first(this.getModelName) }}
     </p>
   </b-form-group>
 </template>
 
 <script>
 export default {
-  name: 'form-text-input',
+  name: 'form-email-input',
   inject: ['$validator'],
   props: {
 
@@ -61,7 +61,7 @@ export default {
       return this.label.toLowerCase()
     },
 
-    setPlaceholder () {
+    getPlaceholder () {
       if (!this.placeholder) this.placeholder = this.labelLC
     },
 
@@ -69,19 +69,19 @@ export default {
       return (this.labelLC.replace(/\s+/g, '-'))
     },
 
-    setGroupId () {
+    getGroupId () {
       if (!this.groupId) {
         this.groupId = this.getLowerCaseId + '-' + 'group'
       }
     },
 
-    setInputId () {
+    getInputId () {
       if (!this.inputId) {
         this.inputId = this.getLowerCaseId + '-' + 'input'
       }
     },
 
-    setModelName () {
+    getModelName () {
       if (!this.modelName) {
         this.modelName = this.labelLC.replace(/\s+/g, '_')
       }
@@ -90,7 +90,7 @@ export default {
 
   computed: {
     hasError () {
-      return this.errors.has(this.modelName)
+      return this.errors.has(this.getModelName)
     },
 
     isInvalid () {
