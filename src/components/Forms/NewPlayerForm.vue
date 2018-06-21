@@ -1,31 +1,20 @@
 <template>
-  <b-container id="player-form">
+  <b-container id="new-player-form">
     <b-form-row>
       <b-col>
         <b-form @submit.prevent="createPlayer">
-          <text-input v-model="player.first_name" :label="'First Name'" />
-          <text-input v-model="player.last_name" :label="'Last name'" />
-          <email-input v-model="player.email" :label="'Email'" />
-          <number-input v-model="player.age" :label="'Age'" />
-
-          <b-form-group id="position-select-group">
-            <b-form-select  id="position-select"
-                            :options="positions"
-                            required
-                            placeholder="position"
-                            aria-label="Position"
-                            name="position"
-                            data-vv-as="Position"
-                            v-validate="'required'"
-                            v-model="player.position">
-            </b-form-select>
-            <span
-              v-show="errors.has('position')"
-              class="text-danger">
-
-              {{ errors.first('position') }}
-            </span>
-          </b-form-group>
+          <input-field  v-model="player.first_name" :label="'First Name'" />
+          <input-field  v-model="player.last_name" :label="'Last name'" />
+          <input-field  v-model="player.email"
+                        :label="'Email'"
+                        :inputType="'email'" />
+          <input-field  v-model="player.age"
+                        :label="'Age'"
+                        :inputType="'number'"
+                        :validations="{ between: [ 1,100 ] }" />
+          <input-select v-model="player.position"
+                        :label="'Position'"
+                        :options="positions" />
           <b-button type="submit" variant="primary" :disabled="invalidSubmit">Submit</b-button>
         </b-form>
       </b-col>
@@ -34,12 +23,11 @@
 </template>
 
 <script>
-import textInput from '@/components/Forms/Inputs/TextInput'
-import numberInput from '@/components/Forms/Inputs/NumberInput'
-import emailInput from '@/components/Forms/Inputs/EmailInput'
+import inputField from '@/components/Forms/Inputs/InputField'
+import inputSelect from '@/components/Forms/Inputs/InputSelect'
 
 export default {
-  name: 'player-form',
+  name: 'new-player-form',
   data () {
     return {
       player: {
@@ -54,9 +42,8 @@ export default {
   },
 
   components: {
-    textInput,
-    numberInput,
-    emailInput
+    inputField,
+    inputSelect
   },
 
   methods: {
@@ -85,11 +72,17 @@ export default {
     },
 
     buildPositionsCollection (positions) {
-      let collection = []
+      let collection = [{
+        text: 'position',
+        value: null,
+        disabled: true
+      }]
+
       positions.forEach((position) => {
         let positionUc = this.$options.filters.capitalize(position)
         collection.push({ text: positionUc, value: position })
       })
+
       return (collection)
     },
 
@@ -104,7 +97,7 @@ export default {
   },
 
   computed: {
-    invalidSubmit: function () {
+    invalidSubmit () {
       let fieldNames = Object.keys(this.fields)
       return !fieldNames.every(key => this.fields[key].valid)
     }
