@@ -11,12 +11,19 @@
         <b-col sm="8" offset-sm="2">
           <b-table hover :items="players" :fields="fields">
             <template slot="full_name" slot-scope="data">
-              <b-link :to="{
-                name: 'players-show',
-                params: { id: data.item.id }
-              }">
+              <b-link :to=" {
+                              name: 'players-show',
+                              params: { id: data.item.id }
+                            }">
                 {{ data.item.full_name }}
               </b-link>
+            </template>
+            <template slot="delete" slot-scope="data">
+              <b-button size="sm"
+                        variant="danger"
+                        @click="destroyPlayer(data.item.id, data.index)">
+                &times;
+              </b-button>
             </template>
           </b-table>
         </b-col>
@@ -40,7 +47,8 @@ export default {
       fields: [
         { key: 'full_name', label: 'Name' },
         'age',
-        'position'
+        'position',
+        { key: 'delete', label: '' }
       ],
       players: []
     }
@@ -51,6 +59,20 @@ export default {
       this.axios.get(this.path)
         .then(response => { this.players = response.data })
         .catch((error) => { alert('Something went wrong!\n' + error) })
+    },
+
+    destroyPlayer (id, index) {
+      this.axios.delete('/players/' + id)
+        .then(response => {
+          if (response.data.success === true) {
+            this.removePlayerFromPage(index)
+          }
+        })
+        .catch((error) => { alert('Error deleting player\n' + error) })
+    },
+
+    removePlayerFromPage (index) {
+      this.players.splice(index, 1)
     }
   },
 
