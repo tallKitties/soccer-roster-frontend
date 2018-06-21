@@ -2,33 +2,26 @@
   <div id="players-list">
     <header-nav/>
     <div class="container clearfix">
-      <h1 class="pb-2 pt-4 border-bottom text-left">
+      <h1 class="pb-2 pt-4 text-center">
         Checkout our team!
       </h1>
     </div>
-    <div class="container">
-      <div class="col-12 col-sm-5 offset-sm-1">
-        <ul class="list-group list-group-flush">
-          <li v-for="player in players"
-            :key="player.id"
-            :player="player.full_name"
-            class="row list-group-item list-group-item-action text-left"
-          >
-
-            <router-link :to="{
-              name: 'players-show',
-              params: { id: player.id }
-            }">
-
-              {{ player.full_name }}
-
-            </router-link>
-            <span>&#65112;</span>
-            {{ player.position | capitalize }}
-          </li>
-        </ul>
-      </div>
-    </div>
+    <b-container>
+      <b-row>
+        <b-col sm="8" offset-sm="2">
+          <b-table hover :items="players" :fields="fields">
+            <template slot="full_name" slot-scope="data">
+              <b-link :to="{
+                name: 'players-show',
+                params: { id: data.item.id }
+              }">
+                {{ data.item.full_name }}
+              </b-link>
+            </template>
+          </b-table>
+        </b-col>
+      </b-row>
+    </b-container>
   </div>
 </template>
 
@@ -39,12 +32,20 @@ export default {
   components: {
     headerNav
   },
+
   name: 'players-list',
+
   data () {
     return {
+      fields: [
+        { key: 'full_name', label: 'Name' },
+        'age',
+        'position'
+      ],
       players: []
     }
   },
+
   methods: {
     fetchPlayers () {
       this.axios.get(this.path)
@@ -52,6 +53,7 @@ export default {
         .catch((error) => { alert('Something went wrong!\n' + error) })
     }
   },
+
   created () {
     this.fetchPlayers()
   }
