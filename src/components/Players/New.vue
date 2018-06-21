@@ -16,7 +16,7 @@
     <div class="mb-5"></div>
     <b-row>
       <b-col sm="10" offset-sm="1" md="8" offset-md="2">
-        <player-form :formType="'new'" @apiError="showError"/>
+        <new-player-form :formType="'new'" @apiError="showError"/>
       </b-col>
     </b-row>
   </div>
@@ -24,7 +24,7 @@
 
 <script>
 import headerNav from '@/components/Nav'
-import playerForm from '@/components/Forms/PlayerForm'
+import newPlayerForm from '@/components/Forms/NewPlayerForm'
 import alertError from '@/components/Utils/AlertError'
 
 export default {
@@ -32,7 +32,7 @@ export default {
   components: {
     alertError,
     headerNav,
-    playerForm
+    newPlayerForm
   },
 
   name: 'players-new',
