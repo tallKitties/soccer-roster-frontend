@@ -1,21 +1,23 @@
 <template>
-  <b-container id="new-player-form">
+  <b-container id="edit-player-form">
     <b-form-row>
       <b-col>
-        <b-form @submit.prevent="createPlayer">
-          <input-field  v-model="player.first_name" :label="'First Name'" />
-          <input-field  v-model="player.last_name" :label="'Last name'" />
-          <input-field  v-model="player.email"
+        <b-form @submit.prevent="updatePlayer">
+          <input-field  v-model="playerInfo.first_name"
+                        :label="'First Name'" />
+          <input-field  v-model="playerInfo.last_name"
+                        :label="'Last name'" />
+          <input-field  v-model="playerInfo.email"
                         :label="'Email'"
                         :inputType="'email'" />
-          <input-field  v-model="player.age"
+          <input-field  v-model="playerInfo.age"
                         :label="'Age'"
                         :inputType="'number'"
                         :validations="{ between: [ 1,100 ] }" />
-          <input-select v-model="player.position"
+          <input-select v-model="playerInfo.position"
                         :label="'Position'"
                         :options="positions" />
-          <b-button type="submit" variant="primary" :disabled="invalidSubmit">Submit</b-button>
+          <b-button type="submit" variant="primary" :disabled="invalidSubmit">Update</b-button>
         </b-form>
       </b-col>
     </b-form-row>
@@ -27,35 +29,34 @@ import inputField from '@/components/Forms/Inputs/InputField'
 import inputSelect from '@/components/Forms/Inputs/InputSelect'
 
 export default {
-  name: 'new-player-form',
-  data () {
-    return {
-      player: {
-        position: null,
-        first_name: '',
-        last_name: '',
-        email: '',
-        age: null
-      },
-      positions: []
-    }
-  },
+  name: 'edit-player-form',
 
   components: {
     inputField,
     inputSelect
   },
 
+  props: ['player'],
+
+  data () {
+    return {
+      positions: []
+    }
+  },
+
   methods: {
 
-    createPlayer (e) {
-      this.axios.post('/players', { player: this.player })
+    updatePlayer (e) {
+      this.axios.patch(
+        '/players/' + this.player.id,
+        { player: this.playerInfo })
         .then(response => {
-          this.goToPlayerEdit(response)
+          this.playerInfo = response.data
+          this.$emit('success', this.playerInfo.first_name + ' was updated.')
         })
         .catch((e) => {
           console.log(e)
-          this.$emit('apiError', 'Error creating player')
+          this.$emit('apiError', 'Error updating player')
         })
     },
 
@@ -84,15 +85,6 @@ export default {
       })
 
       return (collection)
-    },
-
-    goToPlayerEdit (response) {
-      this.$router.push(
-        {
-          name: 'players-edit',
-          params: { id: response.data.id }
-        }
-      )
     }
   },
 
@@ -100,6 +92,10 @@ export default {
     invalidSubmit () {
       let fieldNames = Object.keys(this.fields)
       return !fieldNames.every(key => this.fields[key].valid)
+    },
+
+    playerInfo () {
+      return this.player
     }
   },
 

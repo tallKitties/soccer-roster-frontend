@@ -6,17 +6,16 @@
       v-if="error"
       :message="error"
       @alertClosed="resetAlert"
-    >
-    </alert-error>
+    />
     <div class="container clearfix">
-      <h1 class="pb-2 pt-4 border-bottom">
+      <h1 class="pb-2 pt-4 border-bottom text-center">
         Add to the roster
       </h1>
     </div>
     <div class="mb-5"></div>
     <b-row>
       <b-col sm="10" offset-sm="1" md="8" offset-md="2">
-        <new-player-form :formType="'new'" @apiError="showError"/>
+        <new-player-form @apiError="showError" />
       </b-col>
     </b-row>
   </div>

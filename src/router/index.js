@@ -4,7 +4,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import Vue from 'vue'
 import Router from 'vue-router'
 import PlayersList from '@/components/Players/List'
-import PlayersShow from '@/components/Players/Show'
+import PlayersEdit from '@/components/Players/Edit'
 import PlayersNew from '@/components/Players/New'
 
 Vue.use(Router)
@@ -21,8 +21,8 @@ export default new Router({
     },
     {
       path: '/players/:id',
-      name: 'players-show',
-      component: PlayersShow,
+      name: 'players-edit',
+      component: PlayersEdit,
       props: true
     },
     {

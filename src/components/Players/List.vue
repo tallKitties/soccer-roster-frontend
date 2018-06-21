@@ -12,7 +12,7 @@
           <b-table hover :items="players" :fields="fields">
             <template slot="full_name" slot-scope="data">
               <b-link :to=" {
-                              name: 'players-show',
+                              name: 'players-edit',
                               params: { id: data.item.id }
                             }">
                 {{ data.item.full_name }}
