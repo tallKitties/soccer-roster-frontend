@@ -1,0 +1,10 @@
+{
+    "name": "soccer-roster",
+    "version": "1.0.0",
+    "description": "Soccer roster tracking app",
+    "author": "Ben Kautt",
+    "private": "true",
+    "scripts": {
+    	"postinstall": "npm install express"
+    }
+}
