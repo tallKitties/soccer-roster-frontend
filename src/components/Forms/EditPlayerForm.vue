@@ -52,11 +52,17 @@ export default {
         { player: this.playerInfo })
         .then(response => {
           this.playerInfo = response.data
-          this.$emit('success', this.playerInfo.first_name + ' was updated.')
+          this.sendAlert(
+            'success',
+            this.playerInfo.first_name + ' was updated.'
+          )
         })
         .catch((e) => {
           console.log(e)
-          this.$emit('apiError', 'Error updating player')
+          this.sendAlert(
+            'danger',
+            'Error updating ' + this.playerInfo.first_name
+          )
         })
     },
 
@@ -68,7 +74,7 @@ export default {
         })
         .catch((e) => {
           console.log(e)
-          this.$emit('apiError', 'Error getting positions')
+          this.sendAlert('error', 'Error getting positions')
         })
     },
 
@@ -85,13 +91,22 @@ export default {
       })
 
       return (collection)
+    },
+
+    sendAlert (type, msg) {
+      this.$emit('alert', {
+        type: type,
+        message: msg
+      })
     }
   },
 
   computed: {
     invalidSubmit () {
       let fieldNames = Object.keys(this.fields)
-      return !fieldNames.every(key => this.fields[key].valid)
+      return (!fieldNames.every((key) => {
+        return (this.fields[key].valid && this.fields[key].dirty)
+      }))
     },
 
     playerInfo () {

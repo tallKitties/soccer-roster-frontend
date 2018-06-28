@@ -1,31 +1,28 @@
 <template>
-  <div id="players-show">
+  <div id="players-edit">
     <header-nav/>
-    <alert-error  class="col-12"
-                  v-if="error"
-                  :message="error"
-                  @alertClosed="resetError" />
-    <alert-success  class="col-12"
-                    v-if="success"
-                    :message="success"
-                    @alertClosed="resetSuccess"/>
+    <b-alert  :variant="alertType"
+              fade
+              dismissible
+              :show="showAlert"
+              @dismissed="showAlert=false">
+      {{ alertMessage }}
+    </b-alert>
 
     <div class="container clearfix">
       <h1 class="pb-2 pt-4 border-bottom text-center">
         {{ player.full_name }}
-        <b-button variant="danger"
-                  @click="destroyPlayer"
-                  class="float-right">
-          Delete {{ player.first_name }}
-        </b-button>
       </h1>
+      <b-button variant="danger"
+                @click="destroyPlayer"
+                class="float-right">
+        Delete {{ player.first_name }}
+      </b-button>
     </div>
     <div class="mb-5"></div>
     <b-row>
       <b-col sm="10" offset-sm="1" md="8" offset-md="2">
-        <edit-player-form :player="player"
-                          @apiError="showError"
-                          @success="showSuccess" />
+        <edit-player-form :player="player" @alert="activateAlert" />
       </b-col>
     </b-row>
   </div>
@@ -34,26 +31,23 @@
 <script>
 import headerNav from '@/components/Nav'
 import editPlayerForm from '@/components/Forms/EditPlayerForm'
-import alertError from '@/components/Utils/AlertError'
-import alertSuccess from '@/components/Utils/AlertSuccess'
 
 export default {
   components: {
     headerNav,
-    editPlayerForm,
-    alertError,
-    alertSuccess
+    editPlayerForm
   },
 
   props: ['id'],
 
-  name: 'players-show',
+  name: 'players-edit',
 
   data () {
     return {
       player: {},
-      error: '',
-      success: ''
+      alertType: '',
+      showAlert: false,
+      alertMessage: ''
     }
   },
 
@@ -77,20 +71,10 @@ export default {
         })
     },
 
-    showError (msg) {
-      this.error = msg
-    },
-
-    resetError () {
-      this.error = ''
-    },
-
-    showSuccess (msg) {
-      this.success = msg
-    },
-
-    resetSuccess () {
-      this.success = ''
+    activateAlert (alert) {
+      this.alertType = alert.type
+      this.alertMessage = alert.message
+      this.showAlert = true
     }
   },
 
@@ -103,4 +87,3 @@ export default {
 <style scoped>
 
 </style>
-p
