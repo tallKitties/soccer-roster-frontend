@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import Vue from 'vue'
 import Router from 'vue-router'
-import PlayersList from '@/components/Players/List'
+import PlayersIndex from '@/components/Players/Index'
 import PlayersEdit from '@/components/Players/Edit'
 import PlayersNew from '@/components/Players/New'
 
@@ -14,8 +14,8 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'players-list',
-      component: PlayersList,
+      name: 'players-index',
+      component: PlayersIndex,
       alias: '/players',
       props: true
     },

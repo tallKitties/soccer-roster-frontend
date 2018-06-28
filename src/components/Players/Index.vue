@@ -42,6 +42,12 @@ export default {
 
   name: 'players-list',
 
+  props: {
+    search: {
+      default: ''
+    }
+  },
+
   data () {
     return {
       fields: [
@@ -56,7 +62,11 @@ export default {
 
   methods: {
     fetchPlayers () {
-      this.axios.get(this.path)
+      this.axios.get(this.path, {
+        params: {
+          search: this.search
+        }
+      })
         .then(response => { this.players = response.data })
         .catch((error) => { alert('Something went wrong!\n' + error) })
     },
